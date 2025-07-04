@@ -7,17 +7,18 @@ import { Preloader } from './scenes/Preloader'
 const physicsConfig: Types.Core.PhysicsConfig = {
     default: 'arcade',
     arcade: {
-        debug: false,
-        gravity: { x: 0, y: 500 }
+        debug: true,
+        gravity: { x: 0, y: 700 }
     }
 }
 
 const config: Types.Core.GameConfig = {
     type: AUTO,
-    width: 800,
-    height: 600,
+    width: 640,
+    height: 360,
+    pixelArt: true,
     parent: 'game-container',
-    backgroundColor: '#028af8',
+    backgroundColor: '#9488e0',
     physics: physicsConfig,
     scale: {
         mode: Scale.FIT,

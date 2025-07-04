@@ -1,16 +1,20 @@
 export class Preloader extends Phaser.Scene {
     constructor() {
-        super('Preloader');
+        super('Preloader')
     }
 
     preload() {
-        this.load.setPath('assets');
-        this.load.image('sky', 'sky.png');
-        this.load.image('ground', 'platform.png');
-        this.load.image('star', 'star.png');
-        this.load.image('bomb', 'bomb.png');
-        this.load.spritesheet('dude', 'dude.png', { frameWidth: 32, frameHeight: 48 }
-        );
+        this.load.setPath('assets')
+        this.load.image('logo')
+        this.load.image('bg')
+        this.load.image('sky', 'sky.png')
+        this.load.image('star', 'star.png')
+        this.load.spritesheet('annett', 'annett-export.png', { frameWidth: 64, frameHeight: 64 })
+
+        // tileset
+        this.load.image('tileset_nivel0', 'tileset.png')
+        this.textures.get('tileset_nivel0').setFilter(Phaser.Textures.FilterMode.NEAREST)
+        this.load.tilemapTiledJSON('tilemap_nivel0', 'nivel0.json')
     }
 
     create() {
@@ -18,6 +22,6 @@ export class Preloader extends Phaser.Scene {
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Game');
+        this.scene.start('Game')
     }
 }
