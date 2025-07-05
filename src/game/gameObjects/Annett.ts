@@ -1,5 +1,13 @@
 export class Annett extends Phaser.Physics.Arcade.Sprite {
 
+    private sfx: {
+        jump: Phaser.Sound.BaseSound,
+        walk: Phaser.Sound.BaseSound
+    }
+    private coyoteTime = 90 // ms
+    private coyoteTimer = 0
+    private walkTimer = 0
+
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'annett')
 
@@ -12,6 +20,11 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
         this.body?.setOffset(24, 22)
 
         this.initAnimations()
+
+        this.sfx = {
+            jump: scene.sound.add('jumpSound'),
+            walk: scene.sound.add('walkSound')
+        }
     }
 
     initAnimations() {
@@ -51,6 +64,7 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(200)
         this.setFlipX(false)
         this.body?.setOffset(24, 22)
+        this.playWalkSound()
     }
 
     stopMove() {
@@ -58,10 +72,13 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
     }
 
     jump() {
-        if (this.body?.blocked.down) {
+        if (this.coyoteTimer > 0) {
             this.setVelocityY(-320)
+            this.sfx.jump.play()
+            this.coyoteTimer = 0 // evita doble salto con el mismo coyote
         }
     }
+
 
     // 👇 Solo animaciones ahora:
     playIdle() {
@@ -79,5 +96,29 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
     playFall() {
         this.anims.play('fall', true)
     }
+
+    preUpdate(time: number, delta: number) {
+        super.preUpdate(time, delta)
+
+        if (this.body?.blocked.down) {
+            this.coyoteTimer = this.coyoteTime // resetea coyote cuando está en el suelo
+        } else {
+            this.coyoteTimer -= delta // va bajando con el tiempo
+        }
+    }
+
+    private playWalkSound() {
+        const now = this.scene.time.now
+
+        if (
+            this.body?.blocked.down &&          // Solo cuando toca el suelo
+            now - this.walkTimer > 550 &&    // Delay entre pasos
+            this.body.velocity.x !== 0       // Solo si está moviéndose
+        ) {
+            this.sfx.walk.play()
+            this.walkTimer = now
+        }
+    }
+
 
 }

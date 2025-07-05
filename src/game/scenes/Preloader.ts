@@ -15,6 +15,13 @@ export class Preloader extends Phaser.Scene {
         this.load.image('tileset_nivel0', 'tileset.png')
         this.textures.get('tileset_nivel0').setFilter(Phaser.Textures.FilterMode.NEAREST)
         this.load.tilemapTiledJSON('tilemap_nivel0', 'nivel0.json')
+
+        // sounds
+        this.load.audio('jumpSound', ['sounds/jump_1.ogg'])
+        this.load.audio('walkSound', ['sounds/walk.ogg'])
+
+        // music
+        this.load.audio('music_nivel0', ['music/music_nivel0.ogg'])
     }
 
     create() {

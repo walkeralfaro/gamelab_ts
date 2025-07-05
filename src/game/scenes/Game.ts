@@ -5,6 +5,7 @@ export class Game extends Scene {
     platforms!: Physics.Arcade.StaticGroup
     annett!: Annett
     cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+    music!: Phaser.Sound.BaseSound
 
     constructor() {
         super('Game')
@@ -15,8 +16,15 @@ export class Game extends Scene {
         // this.add.image(0, 0, 'bg').setOrigin(0)
 
         // límites del mundo
-        this.physics.world.setBounds(0, 0, 2000, 640)
-        this.cameras.main.setBounds(0, 0, 2000, 640)
+        this.physics.world.setBounds(0, 0, 1600, 640)
+        this.cameras.main.setBounds(0, 0, 1600, 640)
+
+        // sounds
+
+        // music
+        this.music = this.sound.add('music_nivel0', {loop: true, volume: 0.5})
+        this.music.play()
+
 
         // plataformas
         const map = this.make.tilemap({ key: 'tilemap_nivel0' })
