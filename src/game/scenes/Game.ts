@@ -6,8 +6,8 @@ import { InputManager } from '../../input/InputManager'
 export class Game extends Scene {
     platforms!: Physics.Arcade.StaticGroup
     annett!: Annett
-    cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     music!: Phaser.Sound.BaseSound
+    debugText!: Phaser.GameObjects.Text
 
     constructor() {
         super('Game')
@@ -22,7 +22,7 @@ export class Game extends Scene {
         // sounds
 
         // music
-        this.music = this.sound.add('music_nivel0', { loop: true, volume: 0.5 })
+        this.music = this.sound.add('music_nivel0', { loop: true, volume: 0.2 })
         this.music.play()
 
         // plataformas
@@ -43,6 +43,15 @@ export class Game extends Scene {
         // camara
         this.cameras.main.startFollow(this.annett)
 
+
+        // DEBUG ****************************************************
+        // this.debugText = this.add.text(10, 10, '', {
+        //     font: '14px monospace',
+        //     color: '#ffffff',
+        //     backgroundColor: '#000000',
+        //     padding: { x: 10, y: 5 }
+        // }).setScrollFactor(0).setDepth(1000)
+
     }
 
     update() {
@@ -52,6 +61,20 @@ export class Game extends Scene {
 
         this.annett.handleInput(input)
         this.annett.updateAnimationState()
+
+        // DEBUG **********************************************************
+        // const velocity = this.annett.body?.velocity
+        // const acceleration = this.annett.body?.acceleration
+        // const fps = this.game.loop.actualFps.toFixed(1)
+
+        // this.debugText.setText([
+        //     `FPS: ${fps}`,
+        //     `Vel X: ${velocity?.x.toFixed(2)}`,
+        //     `Vel Y: ${velocity?.y.toFixed(2)}`,
+        //     `Acc X: ${acceleration.x.toFixed(2)}`,
+        //     `Acc Y: ${acceleration.y.toFixed(2)}`,
+        //     `Input: ${InputManager.getInstance().getInputType()}`
+        // ])
     }
 
 }

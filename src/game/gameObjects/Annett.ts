@@ -18,14 +18,20 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true)
 
+        // hitbox
         this.body?.setSize(24, 42)
         this.body?.setOffset(24, 22)
 
+        // inercia
+        this.setDragX(800)
+        this.setMaxVelocity(200, 500)
+
+        // animaciones
         this.initAnimations()
 
         this.sfx = {
-            jump: scene.sound.add('jumpSound'),
-            walk: scene.sound.add('walkSound')
+            jump: scene.sound.add('jumpSound', { volume: 0.3 }),
+            walk: scene.sound.add('walkSound', { volume: 0.2 })
         }
     }
 
@@ -56,21 +62,22 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
     }
 
     // 👇 Solo se encarga de movimiento
-    moveLeft() {
-        this.setVelocityX(-200)
-        this.setFlipX(true)
-        this.body?.setOffset(16, 22)
+    moveRight() {
+        this.setAccelerationX(800);
+        this.setFlipX(false);
+        this.body?.setOffset(24, 22);
+        this.playWalkSound();
     }
 
-    moveRight() {
-        this.setVelocityX(200)
-        this.setFlipX(false)
-        this.body?.setOffset(24, 22)
-        this.playWalkSound()
+    moveLeft() {
+        this.setAccelerationX(-800);
+        this.setFlipX(true);
+        this.body?.setOffset(16, 22);
+        this.playWalkSound();
     }
 
     stopMove() {
-        this.setVelocityX(0)
+        this.setAccelerationX(0)
     }
 
     jump() {
@@ -81,6 +88,7 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    // manejo input
     handleInput(input: InputState) {
         if (input.left) this.moveLeft()
         else if (input.right) this.moveRight()
@@ -89,6 +97,7 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
         if (input.jump) this.jump()
     }
 
+    // asignar animaciones
     updateAnimationState() {
         const isOnGround = this.body!.blocked.down
         const isFalling = this.body!.velocity.y > 0 && !isOnGround
@@ -129,7 +138,7 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
 
         if (
             this.body?.blocked.down &&       // Solo cuando toca el suelo
-            now - this.walkTimer > 550 &&    // Delay entre pasos
+            now - this.walkTimer > 500 &&    // Delay entre pasos
             this.body.velocity.x !== 0       // Solo si está moviéndose
         ) {
             this.sfx.walk.play()
