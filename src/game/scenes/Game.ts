@@ -1,6 +1,8 @@
 import { Physics, Scene } from 'phaser'
 import { Annett } from '../gameObjects/Annett'
 
+import { InputManager } from '../../input/InputManager'
+
 export class Game extends Scene {
     platforms!: Physics.Arcade.StaticGroup
     annett!: Annett
@@ -12,8 +14,6 @@ export class Game extends Scene {
     }
 
     create() {
-        // background
-        // this.add.image(0, 0, 'bg').setOrigin(0)
 
         // límites del mundo
         this.physics.world.setBounds(0, 0, 1600, 640)
@@ -22,7 +22,7 @@ export class Game extends Scene {
         // sounds
 
         // music
-        this.music = this.sound.add('music_nivel0', {loop: true, volume: 0.5})
+        this.music = this.sound.add('music_nivel0', { loop: true, volume: 0.5 })
         this.music.play()
 
 
@@ -39,9 +39,12 @@ export class Game extends Scene {
         this.physics.add.collider(this.annett, ground)
 
         // control - teclado
-        if (this.input.keyboard) {
-            this.cursors = this.input.keyboard.createCursorKeys()
-        }
+        // if (this.input.keyboard) {
+        //     this.cursors = this.input.keyboard.createCursorKeys()
+        // }
+
+        // input
+        InputManager.getInstance().init(this)
 
         // camara
         this.cameras.main.startFollow(this.annett)
@@ -50,23 +53,21 @@ export class Game extends Scene {
     }
 
     update() {
+        const inputManager = InputManager.getInstance()
+        inputManager.update()
+        const input = inputManager.getInputState()
+
         const isOnGround = this.annett.body!.blocked.down
         const isFalling = this.annett.body!.velocity.y > 0 && !isOnGround
         const isJumping = this.annett.body!.velocity.y < 0 && !isOnGround
 
         // 👉 Movimiento horizontal
-        if (this.cursors.left.isDown) {
-            this.annett.moveLeft()
-        } else if (this.cursors.right.isDown) {
-            this.annett.moveRight()
-        } else {
-            this.annett.stopMove()
-        }
+        if (input.left) this.annett.moveLeft()
+        else if (input.right) this.annett.moveRight()
+        else this.annett.stopMove()
 
         // 👉 Salto
-        if (Phaser.Input.Keyboard.JustDown(this.cursors.up)) {
-            this.annett.jump()
-        }
+        if (input.jump) this.annett.jump()
 
         // 👉 Animaciones
         switch (true) {

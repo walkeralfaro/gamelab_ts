@@ -5,10 +5,6 @@ export class Preloader extends Phaser.Scene {
 
     preload() {
         this.load.setPath('assets')
-        this.load.image('logo')
-        this.load.image('bg')
-        this.load.image('sky', 'sky.png')
-        this.load.image('star', 'star.png')
         this.load.spritesheet('annett', 'annett-export.png', { frameWidth: 64, frameHeight: 64 })
 
         // tileset

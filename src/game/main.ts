@@ -2,8 +2,6 @@ import { Game as MainGame } from './scenes/Game'
 import { AUTO, Game, Scale, Types } from 'phaser'
 import { Preloader } from './scenes/Preloader'
 
-// Find out more information about the Game Config at:
-// https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const physicsConfig: Types.Core.PhysicsConfig = {
     default: 'arcade',
     arcade: {
@@ -24,10 +22,13 @@ const config: Types.Core.GameConfig = {
         mode: Scale.FIT,
         autoCenter: Scale.CENTER_BOTH
     },
+    input: {
+        gamepad: true
+    },
     scene: [
         Preloader,
         MainGame
-    ]
+    ],
 }
 
 const StartGame = (parent: string) => {
