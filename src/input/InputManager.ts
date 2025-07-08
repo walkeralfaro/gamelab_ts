@@ -11,8 +11,12 @@ export class InputManager {
     private static instance: InputManager
     private inputType: InputType = 'keyboard'
     private pad?: Phaser.Input.Gamepad.Gamepad
-    private cursors?: Phaser.Types.Input.Keyboard.CursorKeys
     private inputState: InputState = { left: false, right: false, jump: false }
+    private keys!: {
+        left: Phaser.Input.Keyboard.Key;
+        right: Phaser.Input.Keyboard.Key;
+        jump: Phaser.Input.Keyboard.Key;
+    }
 
     private constructor() { }
 
@@ -37,13 +41,20 @@ export class InputManager {
         })
 
         // Detectar teclado
-        scene.input.keyboard?.on('keydown', () => {
-            console.log('teclado')
-            this.inputType = 'keyboard'
-        })
+        const keyboard = scene.input.keyboard
+        if (keyboard) {
+            console.log(keyboard, 'teclado detectado')
+            this.keys = {
+                left: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+                right: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+                jump: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+            }
 
-        // Guardamos cursores para teclado
-        this.cursors = scene.input.keyboard?.createCursorKeys()
+            keyboard.on('keydown', () => {
+                console.log('teclado')
+                this.inputType = 'keyboard'
+            })
+        }
     }
 
     public update() {
@@ -52,28 +63,30 @@ export class InputManager {
             this.inputType = 'gamepad'
         }
 
-        // console.log(this.inputType)
-
         // Leer y guardar el estado actual del input
         switch (this.inputType) {
             case 'keyboard': {
-                this.inputState.left = !!this.cursors?.left.isDown
-                this.inputState.right = !!this.cursors?.right.isDown
-                this.inputState.jump = Phaser.Input.Keyboard.JustDown(this.cursors?.up!)
+                if (!this.keys) break
+                this.inputState.left = this.keys.left.isDown
+                this.inputState.right = this.keys.right.isDown
+                this.inputState.jump = Phaser.Input.Keyboard.JustDown(this.keys.jump)
                 break
             }
 
             case 'gamepad': {
                 if (!this.pad) break
                 const axis = this.pad.axes.length > 0 ? this.pad.axes[0].getValue() : 0
-                this.inputState.left = axis < -0.1 || this.pad.left
-                this.inputState.right = axis > 0.1 || this.pad.right
+                const deadZone = 0.4
+                const processedAxis = Math.abs(axis) < deadZone ? 0 : axis
+
+                this.inputState.left = processedAxis < 0 || this.pad.left
+                this.inputState.right = processedAxis > 0 || this.pad.right
                 this.inputState.jump = this.pad.A || this.pad.buttons[0].pressed
                 break
             }
 
             case 'touch': {
-                // Aquí irán botones táctiles (más adelante)
+                // TODO: Aquí irán botones táctiles (más adelante)
                 this.inputState = { left: false, right: false, jump: false }
                 break
             }
