@@ -1,7 +1,7 @@
 // input/inputManager.ts
 export type InputType = 'keyboard' | 'touch' | 'gamepad'
 
-interface InputState {
+export interface InputState {
     left: boolean
     right: boolean
     jump: boolean
@@ -13,9 +13,9 @@ export class InputManager {
     private pad?: Phaser.Input.Gamepad.Gamepad
     private inputState: InputState = { left: false, right: false, jump: false }
     private keys!: {
-        left: Phaser.Input.Keyboard.Key;
-        right: Phaser.Input.Keyboard.Key;
-        jump: Phaser.Input.Keyboard.Key;
+        left: Phaser.Input.Keyboard.Key
+        right: Phaser.Input.Keyboard.Key
+        jump: Phaser.Input.Keyboard.Key
     }
 
     private constructor() { }

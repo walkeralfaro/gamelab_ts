@@ -25,7 +25,6 @@ export class Game extends Scene {
         this.music = this.sound.add('music_nivel0', { loop: true, volume: 0.5 })
         this.music.play()
 
-
         // plataformas
         const map = this.make.tilemap({ key: 'tilemap_nivel0' })
         const tileset = map.addTilesetImage('suelo', 'tileset_nivel0')
@@ -38,17 +37,11 @@ export class Game extends Scene {
         this.annett = new Annett(this, 50, 100)
         this.physics.add.collider(this.annett, ground)
 
-        // control - teclado
-        // if (this.input.keyboard) {
-        //     this.cursors = this.input.keyboard.createCursorKeys()
-        // }
-
         // input
         InputManager.getInstance().init(this)
 
         // camara
         this.cameras.main.startFollow(this.annett)
-
 
     }
 
@@ -57,40 +50,8 @@ export class Game extends Scene {
         inputManager.update()
         const input = inputManager.getInputState()
 
-        const isOnGround = this.annett.body!.blocked.down
-        const isFalling = this.annett.body!.velocity.y > 0 && !isOnGround
-        const isJumping = this.annett.body!.velocity.y < 0 && !isOnGround
-
-        // 👉 Movimiento horizontal
-        if (input.left) this.annett.moveLeft()
-        else if (input.right) this.annett.moveRight()
-        else this.annett.stopMove()
-
-        // 👉 Salto
-        if (input.jump) this.annett.jump()
-
-        // 👉 Animaciones
-        switch (true) {
-            case isFalling:
-                this.annett.playFall()
-                break
-
-            case isJumping:
-                this.annett.playJump()
-                break
-
-            case isOnGround && this.annett.body!.velocity.x !== 0:
-                this.annett.playWalk()
-                break
-
-            case isOnGround:
-                this.annett.playIdle()
-                break
-        }
-
+        this.annett.handleInput(input)
+        this.annett.updateAnimationState()
     }
-
-
-
 
 }

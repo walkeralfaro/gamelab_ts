@@ -1,3 +1,5 @@
+import { InputState } from "../../input/InputManager"
+
 export class Annett extends Phaser.Physics.Arcade.Sprite {
 
     private sfx: {
@@ -79,22 +81,37 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    handleInput(input: InputState) {
+        if (input.left) this.moveLeft()
+        else if (input.right) this.moveRight()
+        else this.stopMove()
 
-    // 👇 Solo animaciones ahora:
-    playIdle() {
-        this.anims.play('idle', true)
+        if (input.jump) this.jump()
     }
 
-    playWalk() {
-        this.anims.play('walk', true)
-    }
+    updateAnimationState() {
+        const isOnGround = this.body!.blocked.down
+        const isFalling = this.body!.velocity.y > 0 && !isOnGround
+        const isJumping = this.body!.velocity.y < 0 && !isOnGround
+        const isMoving = this.body!.velocity.x !== 0
 
-    playJump() {
-        this.anims.play('jump', true)
-    }
+        switch (true) {
+            case isFalling:
+                this.anims.play('fall', true)
+                break
 
-    playFall() {
-        this.anims.play('fall', true)
+            case isJumping:
+                this.anims.play('jump', true)
+                break
+
+            case isOnGround && isMoving:
+                this.anims.play('walk', true)
+                break
+
+            case isOnGround:
+                this.anims.play('idle', true)
+                break
+        }
     }
 
     preUpdate(time: number, delta: number) {
@@ -111,7 +128,7 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
         const now = this.scene.time.now
 
         if (
-            this.body?.blocked.down &&          // Solo cuando toca el suelo
+            this.body?.blocked.down &&       // Solo cuando toca el suelo
             now - this.walkTimer > 550 &&    // Delay entre pasos
             this.body.velocity.x !== 0       // Solo si está moviéndose
         ) {
@@ -119,6 +136,5 @@ export class Annett extends Phaser.Physics.Arcade.Sprite {
             this.walkTimer = now
         }
     }
-
 
 }
