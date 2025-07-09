@@ -45,12 +45,12 @@ export class Game extends Scene {
 
 
         // DEBUG ****************************************************
-        // this.debugText = this.add.text(10, 10, '', {
-        //     font: '14px monospace',
-        //     color: '#ffffff',
-        //     backgroundColor: '#000000',
-        //     padding: { x: 10, y: 5 }
-        // }).setScrollFactor(0).setDepth(1000)
+        this.debugText = this.add.text(10, 10, '', {
+            font: '10px monospace',
+            color: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 10, y: 5 }
+        }).setScrollFactor(0).setDepth(1000)
 
     }
 
@@ -63,18 +63,27 @@ export class Game extends Scene {
         this.annett.updateAnimationState()
 
         // DEBUG **********************************************************
-        // const velocity = this.annett.body?.velocity
-        // const acceleration = this.annett.body?.acceleration
-        // const fps = this.game.loop.actualFps.toFixed(1)
+        const velocity = this.annett.body?.velocity
+        const acceleration = this.annett.body?.acceleration
+        const fps = this.game.loop.actualFps.toFixed(1)
 
-        // this.debugText.setText([
-        //     `FPS: ${fps}`,
-        //     `Vel X: ${velocity?.x.toFixed(2)}`,
-        //     `Vel Y: ${velocity?.y.toFixed(2)}`,
-        //     `Acc X: ${acceleration.x.toFixed(2)}`,
-        //     `Acc Y: ${acceleration.y.toFixed(2)}`,
-        //     `Input: ${InputManager.getInstance().getInputType()}`
-        // ])
+        const pad = inputManager.getGamepad()
+        const buttonStates = pad
+            ? pad.buttons
+                .map((btn, i) => `${i}:${btn.pressed ? '1' : '0'}`)
+                .join(' ')
+            : 'No Gamepad'
+
+        this.debugText.setText([
+            `FPS: ${fps}`,
+            `Vel X: ${velocity?.x.toFixed(2)}`,
+            `Vel Y: ${velocity?.y.toFixed(2)}`,
+            `Acc X: ${acceleration.x.toFixed(2)}`,
+            `Acc Y: ${acceleration.y.toFixed(2)}`,
+            `Input: ${inputManager.getInputType()}`,
+            `Jump: ${input.jump}`,
+            `Buttons: ${buttonStates}`
+        ])
     }
 
 }
