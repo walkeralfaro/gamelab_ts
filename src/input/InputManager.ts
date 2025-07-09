@@ -17,6 +17,7 @@ export class InputManager {
         right: Phaser.Input.Keyboard.Key
         jump: Phaser.Input.Keyboard.Key
     }
+    private jumpPressed = false
 
     private constructor() { }
 
@@ -30,9 +31,17 @@ export class InputManager {
     public init(scene: Phaser.Scene) {
         // Detectar gamepad
         scene.input.gamepad?.once('connected', (pad: Phaser.Input.Gamepad.Gamepad) => {
-            console.log('connected', pad.id)
+            console.log('connected', pad.index)
             this.pad = pad
             this.inputType = 'gamepad'
+
+            // detecta si esta presionado salto
+            pad.on('down', (index: number) => {
+                if (index === 0) {
+                    this.jumpPressed = true
+                }
+            })
+
         })
 
         // Detectar puntero
@@ -43,7 +52,6 @@ export class InputManager {
         // Detectar teclado
         const keyboard = scene.input.keyboard
         if (keyboard) {
-            console.log(keyboard, 'teclado detectado')
             this.keys = {
                 left: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
                 right: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
@@ -81,7 +89,7 @@ export class InputManager {
 
                 this.inputState.left = processedAxis < 0 || this.pad.left
                 this.inputState.right = processedAxis > 0 || this.pad.right
-                this.inputState.jump = this.pad.A || this.pad.buttons[0].pressed
+                this.inputState.jump = this.jumpPressed
                 break
             }
 
@@ -91,6 +99,8 @@ export class InputManager {
                 break
             }
         }
+
+        this.jumpPressed = false
     }
 
     public getInputType(): InputType {
