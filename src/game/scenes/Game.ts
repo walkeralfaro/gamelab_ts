@@ -43,7 +43,6 @@ export class Game extends Scene {
         // camara
         this.cameras.main.startFollow(this.annett)
 
-
         // DEBUG ****************************************************
         this.debugText = this.add.text(10, 10, '', {
             font: '10px monospace',
@@ -84,6 +83,8 @@ export class Game extends Scene {
             `Jump: ${input.jump}`,
             `Buttons: ${buttonStates}`
         ])
+        // DEBUG **********************************************************
+
     }
 
 }

@@ -12,15 +12,17 @@ const physicsConfig: Types.Core.PhysicsConfig = {
 
 const config: Types.Core.GameConfig = {
     type: AUTO,
-    width: 640,
-    height: 360,
+    // width: 640,
+    // height: 360,
     pixelArt: true,
     parent: 'game-container',
     backgroundColor: '#9488e0',
     physics: physicsConfig,
     scale: {
         mode: Scale.FIT,
-        autoCenter: Scale.CENTER_BOTH
+        autoCenter: Scale.CENTER_BOTH,
+        width: 640,
+        height: 360,
     },
     input: {
         gamepad: true
