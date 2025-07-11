@@ -24,6 +24,9 @@
         "vite": "^6.3.1"
     },
     "dependencies": {
+        "@capacitor/android": "^7.4.2",
+        "@capacitor/cli": "^7.4.2",
+        "@capacitor/core": "^7.4.2",
         "phaser": "^3.90.0",
         "terser": "^5.39.0"
     }
