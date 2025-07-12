@@ -2,19 +2,6 @@ import { Game as MainGame } from './scenes/Game'
 import { AUTO, Game, Scale, Types } from 'phaser'
 import { Preloader } from './scenes/Preloader'
 
-document.getElementById('start-btn')?.addEventListener('click', () => {
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-
-    // Ocultamos el botón de inicio y mostramos el canvas
-    document.getElementById('start-screen')!.style.display = 'none';
-    document.getElementById('game-container')!.style.display = 'block';
-
-    // Iniciar el juego
-    StartGame('game-container');
-});
-
-
 const physicsConfig: Types.Core.PhysicsConfig = {
     default: 'arcade',
     arcade: {
